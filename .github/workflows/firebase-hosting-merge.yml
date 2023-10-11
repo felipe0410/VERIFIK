@@ -33,6 +33,6 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.HOSTING_DEPLOYMENT }}"
           channelId: live
-          projectId: felipecardozo-ed518
+          projectId: verifik-b217c
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
