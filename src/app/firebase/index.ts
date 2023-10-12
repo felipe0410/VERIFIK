@@ -26,7 +26,7 @@ export const firebaseConfig = {
 console.log("process.env.DB_HOST:::>", process.env.FIREBASE_APIKEY)
 
 export const app: FirebaseApp = initializeApp(firebaseConfig);
-export const analytics: Analytics = getAnalytics(app);
+// export const analytics: Analytics = getAnalytics(app);
 export const auth: Auth = getAuth(app);
 export const currentUser: User | null = auth?.currentUser
 export const db: Firestore = getFirestore(app);
