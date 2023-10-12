@@ -1,3 +1,4 @@
+'use client'
 import { FirebaseApp, FirebaseError, initializeApp } from "firebase/app";
 import { Analytics, getAnalytics } from "firebase/analytics";
 import { Auth, getAuth, User } from "firebase/auth";
@@ -14,16 +15,16 @@ export const firebaseConfig = {
     // messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID ?? "",
     // appId: process.env.FIREBASE_APPID ?? "",
     // measurementId: process.env.FIREBASE_MEASUREMENTID ?? "",
-    
-    apiKey: process.env.FIREBASE_APIKEY ?? "AIzaSyC-LZQ_-f43LxYyWheEjD9Vf2tMngkAisU",
-    authDomain: process.env.FIREBASE_AUTHDOMAIN ?? "verifik-b217c.firebaseapp.com",
-    projectId: process.env.FIREBASE_PROJECTID ?? "verifik-b217c",
-    storageBucket: process.env.FIREBASE_STORAGEBUCKET ?? "verifik-b217c.appspot.com",
-    messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID ?? "169324462723",
-    appId: process.env.FIREBASE_APPID ?? "1:169324462723:web:6f96578e28812b65c3d1b6",
-    measurementId: process.env.FIREBASE_MEASUREMENTID ?? "G-ZSTEBDWSVT",
+
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY ?? "",
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN ?? "",
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID ?? "",
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGEBUCKET ?? "",
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID ?? "",
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APPID ?? "",
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID ?? "",
 };
-console.log("process.env.DB_HOST:::>", process.env.FIREBASE_APIKEY)
+console.log("process.env.DB_HOST:::>", process.env.NEXT_PUBLIC_FIREBASE_APIKEY)
 
 export const app: FirebaseApp = initializeApp(firebaseConfig);
 // export const analytics: Analytics = getAnalytics(app);
