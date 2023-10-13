@@ -29,4 +29,4 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.HOSTING_DEPLOYMENT }}"
-          projectId: felipecardozo-ed518
+          projectId: verifik-b217c

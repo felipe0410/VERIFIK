@@ -1,53 +1,148 @@
 "use client";
-import { Box } from "@mui/material";
-import Container from "./components/Container/Container";
-// import { getCategories, getNote } from "./hooks/MySQL";
-import { useEffect, useState } from "react";
-// import CardNote from "./components/cardNotes/cardNotes";
+import { Box, Typography, Button } from "@mui/material";
+import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
+import FlipIcon from "@mui/icons-material/Flip";
+import ScannerIcon from "@mui/icons-material/Scanner";
+import { useState } from "react";
+import ModalComponent from "./scaner/scan";
 
-export default function Home() {
-  const [petition, setPetition] = useState(1);
-  const [notes, setNotes] = useState<
-    Array<{
-      Categories_idCategories: number;
-      idNOTE: number;
-      msg: string;
-      titleNote: string;
-    }>
-  >([]);
-  const [categories, setCategories] = useState<
-    Array<{
-      categoryName: string;
-      idCategories: number;
-    }>
-  >([
+const CreateNote = () => {
+  const [openZero, setOpenZero] = useState(false);
+  const [openPrompt, setOpenPrompt] = useState(false);
+  const [openStudio, setOpenStudio] = useState(false);
+
+  console.log(openZero);
+  console.log(openPrompt);
+  console.log(openStudio);
+
+  const typeScan = [
     {
-      categoryName: "",
-      idCategories: 1,
+      name: "SCAN-ZERO",
+      icon: <SensorOccupiedIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      pacth: "/scan-zero",
+      description: [
+        "Offers OCR for extracting information from scanned documents.",
+        "Provides extracted data in OCR text format along with corresponding labels.",
+        "Includes validation and verification of the accuracy of the extracted data.",
+      ],
+      endPoint: "https://api.verifik.co/v2/ocr/scan-zero",
+      open: openZero,
+      setOpen: setOpenZero,
+      close: () => setOpenZero(false),
     },
-  ]);
-
-  // useEffect(() => {
-  //   const getNotes = async () => {
-  //     const note = await getNote();
-  //     setNotes(note);
-  //     const categoriess: any = await getCategories();
-  //     setCategories(categoriess);
-  //   };
-  //   getNotes();
-  // }, [petition]);
+    {
+      name: "SCAN-PROMPT",
+      icon: <FlipIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      pacth: "/scan-prompt",
+      description: [
+        "Enables scanning, extraction, and verification of data in documents using OCR and AI technology.",
+        "Allows you to send document images and receive extracted data.",
+        "Promises higher accuracy and efficiency in document processing due to integration with AI models.",
+      ],
+      endPoint: "https://api.verifik.co/v2/ocr/scan-prompt",
+      open: openPrompt,
+      setOpen: setOpenPrompt,
+      close: () => setOpenPrompt(false),
+    },
+    {
+      name: "SCAN-STUDIO",
+      icon: <ScannerIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      pacth: "/scan-studio",
+      description: [
+        "Uses pretrained models for performing OCR on identity documents.",
+        "Focuses on the fast and accurate extraction of data from identity documents such as passports and ID cards.",
+        "Provides faster and more accurate responses due to the use of pretrained models.",
+      ],
+      endPoint: "https://api.verifik.co/v2/ocr/scan-studio",
+      open: openStudio,
+      setOpen: setOpenStudio,
+      close: () => setOpenStudio(false),
+    },
+  ];
 
   return (
-    <main>
-      <Box>
-        <Container>
-          <Box width={"90%"} sx={{ display: "flex", flexWrap: "wrap" }}>
-            {notes.map((note) => (
-              <Box key={note.idNOTE}>{/* notes */}</Box>
+    <Box  sx={{ color: "#fff", marginTop: "130px" }}>
+      <Typography
+        align="center"
+        color="initial"
+        sx={{
+          color: "#FF6B00",
+          fontFamily: "Nunito",
+          fontSize: "50px",
+          fontStyle: "normal",
+          fontWeight: 800,
+          lineHeight: "normal",
+          marginBottom: "30px",
+        }}
+      >
+        SCANER
+      </Typography>
+      <Box sx={{ width: "100%" }}>
+        {
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            {typeScan.map((button, index) => (
+              <Button
+                onClick={() => button.setOpen(true)}
+                sx={{
+                  width: "25%",
+                  padding: "20px",
+                  borderRadius: "40px",
+                  background: "#08315C",
+                  boxShadow:
+                    "0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                }}
+                key={index}
+              >
+                {
+                  <Box>
+                    <Typography
+                      sx={{
+                        color: "#FFF",
+                        fontFamily: "Nunito",
+                        fontSize: "24px",
+                        fontStyle: "normal",
+                        fontWeight: 700,
+                        lineHeight: "normal",
+                      }}
+                    >
+                      {button.name}
+                    </Typography>
+                    <Box
+                      sx={{
+                        padding: "20px",
+                      }}
+                    >
+                      {button.icon}
+                    </Box>
+                    <Box>
+                      {
+                        <ul style={{ color: "#FFF", textAlign: "left" }}>
+                          {button.description.map((element, i) => (
+                            <li key={i}>{element}</li>
+                          ))}
+                        </ul>
+                      }
+                    </Box>
+                    <ModalComponent
+                      setOpen={close}
+                      title={button.name}
+                      pacth={button.pacth}
+                      open={button.open}
+                    />
+                  </Box>
+                }
+              </Button>
             ))}
           </Box>
-        </Container>
+        }
       </Box>
-    </main>
+    </Box>
   );
-}
+};
+
+export default CreateNote;

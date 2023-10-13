@@ -1,21 +1,12 @@
 'use client'
 import { FirebaseApp, FirebaseError, initializeApp } from "firebase/app";
-import { Analytics, getAnalytics } from "firebase/analytics";
 import { Auth, getAuth, User } from "firebase/auth";
-import { Firestore, addDoc, collection, getFirestore } from "firebase/firestore";
+import { Firestore, addDoc, collection, getDocs, getFirestore, query } from "firebase/firestore";
 import { FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { v4 } from 'uuid'
 
 
 export const firebaseConfig = {
-    // apiKey: process.env.FIREBASE_APIKEY ?? "",
-    // authDomain: process.env.FIREBASE_AUTHDOMAIN ?? "",
-    // projectId: process.env.FIREBASE_PROJECTID ?? "",
-    // storageBucket: process.env.FIREBASE_STORAGEBUCKET ?? "",
-    // messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID ?? "",
-    // appId: process.env.FIREBASE_APPID ?? "",
-    // measurementId: process.env.FIREBASE_MEASUREMENTID ?? "",
-
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY ?? "",
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN ?? "",
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID ?? "",
@@ -24,10 +15,8 @@ export const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APPID ?? "",
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID ?? "",
 };
-console.log("process.env.DB_HOST:::>", process.env.NEXT_PUBLIC_FIREBASE_APIKEY)
 
 export const app: FirebaseApp = initializeApp(firebaseConfig);
-// export const analytics: Analytics = getAnalytics(app);
 export const auth: Auth = getAuth(app);
 export const currentUser: User | null = auth?.currentUser
 export const db: Firestore = getFirestore(app);
@@ -86,7 +75,6 @@ export const saveDataToFirestore = async (data: {
     client: string;
     documentNumber: string;
 }) => {
-    console.log('data::>', data)
     try {
         const scanCollection = collection(db, "scan");
         const docRef = await addDoc(scanCollection, data);
@@ -94,6 +82,28 @@ export const saveDataToFirestore = async (data: {
         return docRef.id;
     } catch (error) {
         console.error("Error adding document: ", error);
+        throw error;
+    }
+};
+
+export const getDataFromFirestore = async () => {
+    try {
+        const scanCollection = collection(db, 'scan');
+        const q = query(scanCollection);
+
+        const querySnapshot = await getDocs(q);
+        const data: any = [];
+
+        querySnapshot.forEach((doc) => {
+            data.push({
+                id: doc.id,
+                ...doc.data(),
+            });
+        });
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching documents: ', error);
         throw error;
     }
 };

@@ -16,14 +16,14 @@ function Sidebar() {
   const pathname = usePathname();
   const sections = [
     {
-      section: "Resultados",
-      icon: <CoPresentIcon fontSize="large" style={{ color: "#fff" }} />,
+      section: "Escanear",
+      icon: <DocumentScannerIcon fontSize="large" style={{ color: "#fff" }} />,
       id: "/",
     },
     {
-      section: "Escanear",
-      icon: <DocumentScannerIcon fontSize="large" style={{ color: "#fff" }} />,
-      id: "/scaner",
+      section: "Resultados",
+      icon: <CoPresentIcon fontSize="large" style={{ color: "#fff" }} />,
+      id: "/scans",
     },
   ];
   return (

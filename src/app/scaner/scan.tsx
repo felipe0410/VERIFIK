@@ -1,7 +1,8 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { saveDataToFirestore, uploadImage } from "../firebase";
 import Loading from "./Loading";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Typography,
@@ -51,12 +52,12 @@ const ModalComponent = ({
   pacth: string;
   open: boolean;
 }) => {
+  const [openn, setOpenn] = useState(open);
   const [imageBase64, setImageBase64] = useState("");
   const [loading, setLoading] = useState(false);
   const [scan, setScan] = useState(false);
-  const [urlImg, setUrlIMG] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
-  //   const [response, setResponse] = useState<any>(null);
+  const [fileRef, setFileRef] = useState<HTMLInputElement | null>(null);
+  const [key, setKey] = useState(0);
   const [data, setData] = useState({
     img: "",
     last_name: "****************************",
@@ -67,10 +68,9 @@ const ModalComponent = ({
     documentNumber: "****************************",
   });
 
-  console.log("data::::>", data);
-
-  const handleClose = () => setOpen(false);
-
+  const handleClose = () => {
+    setOpenn(false);
+  };
   const handleFileInputChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
@@ -89,16 +89,13 @@ const ModalComponent = ({
         country: "CO",
       };
       const apiUrl = `https://api.verifik.co/v2/ocr${pacth}`;
-      const authorizationToken =
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjY1MjcxOTdhYzBiNmEzYzA4N2ExMDNiZiIsInYiOjIsInJvbGUiOiJjbGllbnQiLCJKV1RQaHJhc2UiOiI2NTI3MTk3NmJhYjYwOWMwNWUyNzBiN2QiLCJleHBpcmVzQXQiOiIyMDIzLTExLTEwIDIyOjAwOjA3IiwiaWF0IjoxNjk3MDYxNjA3fQ.bt6pMmudyiLMbbVhZD8sr78N-4IAyVk6tz1tIH3-xao"; // Asegúrate de que la clave de autorización sea válida
-
+      const authorizationToken = process.env.NEXT_PUBLIC_KEY_API_VERIFIK ?? "";
       const headers = {
         Authorization: authorizationToken,
         Accept: "application/json",
         "Content-Type": "application/json",
       };
       const response = await axios.post(apiUrl, requestData, { headers });
-      console.log(response);
       dataExtraction(title, response);
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
@@ -107,7 +104,6 @@ const ModalComponent = ({
 
   const dataExtraction = async (typeOCR: String, response: any) => {
     const img: any = await uploadImage(fileRef);
-    setUrlIMG(img);
     switch (typeOCR) {
       case "SCAN-ZERO":
         const extractionZERO = {
@@ -152,14 +148,45 @@ const ModalComponent = ({
         break;
     }
   };
+
+  useEffect(() => {
+    const openn = open;
+    setOpenn(openn);
+  }, [open]);
+
   return (
     <Modal
+      key={title}
       open={open}
-      onClose={handleClose}
+      onClose={setOpen}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            sx={{
+              border: "solid red 2px",
+              borderRadius: "100%",
+              minWidth: "auto",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+            startIcon={
+              <CloseIcon
+                style={{ margin: "0 auto" }}
+                fontSize="large"
+                sx={{ color: "red" }}
+              />
+            }
+          ></Button>
+        </Box>
         <Typography
           align={"center"}
           sx={{
@@ -197,10 +224,11 @@ const ModalComponent = ({
             >
               Upload IMG
               <VisuallyHiddenInput
+                key={key}
                 accept="image/*"
-                ref={fileRef}
+                ref={(input) => setFileRef(input)}
                 onChange={(e) => {
-                  const scan = async () => {
+                  const scan = () => {
                     setLoading(true);
                     handleFileInputChange(e);
                   };
@@ -285,6 +313,8 @@ const ModalComponent = ({
                 color: "#FFFFFF",
               }}
               onClick={() => {
+                setKey((e) => e + 1);
+                setFileRef(null);
                 setImageBase64("");
                 setLoading(false);
                 setData({
