@@ -165,16 +165,18 @@ const CardContentt: React.FC<CardNoteProps> = ({
         </Box>
       </Box>
 
-      <CardActions>
+      <CardActions sx={{ placeContent: "center" }}>
         <Button
-          sx={{ display: open ? "none" : "block" }}
+          sx={{ display: open ? "none" : "block", borderRadius: "40px" }}
           onClick={() => setPetition(true)}
+          variant="contained"
         >
           MOSTRAR DETALLES
         </Button>
         <Button
-          sx={{ display: !open ? "none" : "block" }}
+          sx={{ display: !open ? "none" : "block", borderRadius: "40px" }}
           onClick={() => setPetition(false)}
+          variant="contained"
         >
           Ocultar DETALLES
         </Button>

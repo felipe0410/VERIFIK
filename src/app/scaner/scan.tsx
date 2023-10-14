@@ -1,7 +1,7 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { saveDataToFirestore, uploadImage } from "../firebase";
 import Loading from "./Loading";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   Modal,
 } from "@mui/material";
 import axios from "axios";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 const style = {
   position: "absolute" as "absolute",
@@ -52,11 +53,10 @@ const ModalComponent = ({
   pacth: string;
   open: boolean;
 }) => {
-  const [openn, setOpenn] = useState(open);
   const [imageBase64, setImageBase64] = useState("");
   const [loading, setLoading] = useState(false);
   const [scan, setScan] = useState(false);
-  const [fileRef, setFileRef] = useState<HTMLInputElement | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [key, setKey] = useState(0);
   const [data, setData] = useState({
     img: "",
@@ -69,7 +69,7 @@ const ModalComponent = ({
   });
 
   const handleClose = () => {
-    setOpenn(false);
+    setOpen((e: number) => e + 1);
   };
   const handleFileInputChange = (e: any) => {
     const file = e.target.files[0];
@@ -97,8 +97,28 @@ const ModalComponent = ({
       };
       const response = await axios.post(apiUrl, requestData, { headers });
       dataExtraction(title, response);
+      enqueueSnackbar("scanner completed successfully", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "right",
+        },
+      });
+      setTimeout(() => {
+        setScan(false);
+      }, 2000);
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
+      enqueueSnackbar("Img invalid", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "right",
+        },
+      });
+      setTimeout(() => {
+        setScan(false);
+      }, 2000);
     }
   };
 
@@ -149,210 +169,204 @@ const ModalComponent = ({
     }
   };
 
-  useEffect(() => {
-    const openn = open;
-    setOpenn(openn);
-  }, [open]);
-
   return (
-    <Modal
-      key={title}
-      open={open}
-      onClose={setOpen}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            onClick={handleClose}
-            sx={{
-              border: "solid red 2px",
-              borderRadius: "100%",
-              minWidth: "auto",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-            startIcon={
-              <CloseIcon
-                style={{ margin: "0 auto" }}
-                fontSize="large"
-                sx={{ color: "red" }}
-              />
-            }
-          ></Button>
-        </Box>
-        <Typography
-          align={"center"}
-          sx={{
-            color: "#FF6B00",
-            fontFamily: "Nunito",
-            fontSize: "25px",
-            fontStyle: "normal",
-            fontWeight: 800,
-            lineHeight: "normal",
-          }}
-        >
-          {`DOCUMENT UPLOAD `}
-          <br />
-          <span style={{ color: "#08315C" }} color={"#071D34"}>
-            {title}
-          </span>
-        </Typography>
-        <Box
-          sx={{
-            padding: "20%",
-            textAlign: "center",
-            border: "#00000040 dashed",
-            display: imageBase64 && "none",
-          }}
-        >
-          <CircularProgress
-            sx={{ display: !loading ? "none" : "block", margin: "0 auto" }}
-            size={100}
-          />
-          <Box display={loading ? "none" : "block"}>
-            <Button
-              component="label"
-              variant="contained"
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload IMG
-              <VisuallyHiddenInput
-                key={key}
-                accept="image/*"
-                ref={(input) => setFileRef(input)}
-                onChange={(e) => {
-                  const scan = () => {
-                    setLoading(true);
-                    handleFileInputChange(e);
-                  };
-                  scan();
-                }}
-                type="file"
-              />
-            </Button>
-          </Box>
-        </Box>
-        {imageBase64 && !scan && (
-          <Box>
-            <img style={{ width: "100%" }} src={imageBase64} alt="Preview" />
-          </Box>
-        )}
-        {scan && (
-          <Box>
-            <Loading />
-          </Box>
-        )}
-        {
-          <Box>
-            <Typography
-              align={"center"}
-              sx={{
-                color: "#FF6B00",
-                fontFamily: "Nunito",
-                fontSize: "25px",
-                fontStyle: "normal",
-                fontWeight: 800,
-                lineHeight: "normal",
-              }}
-            >
-              RESULT
-            </Typography>
-            <Box>
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                }}
-              >
-                NUMERO DE DOCUMENTO
-              </Typography>
-              <Typography>CC: {data.documentNumber} </Typography>
-            </Box>
-            <Box>
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                }}
-              >
-                NOMBRE
-              </Typography>
-              <Typography>{data.first_name}</Typography>
-            </Box>
-            <Box>
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                }}
-              >
-                APELLIDO
-              </Typography>
-              <Typography>{data.last_name}</Typography>
-            </Box>
-          </Box>
-        }
-        <Box>
+    <Box>
+      <SnackbarProvider />
+      <Modal
+        key={title}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-evenly",
-              marginTop: "20px",
+              justifyContent: "flex-end",
             }}
           >
             <Button
+              onClick={handleClose}
               sx={{
-                borderRadius: "40px",
-                background: "#FF6B00",
-                boxShadow:
-                  "0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                color: "#FFFFFF",
+                border: "solid red 2px",
+                borderRadius: "100%",
+                minWidth: "auto",
+                display: "flex",
+                justifyContent: "flex-end",
               }}
-              onClick={() => {
-                setKey((e) => e + 1);
-                setFileRef(null);
-                setImageBase64("");
-                setLoading(false);
-                setData({
-                  img: "",
-                  last_name: "****************************",
-                  first_name: "***************************",
-                  documentType: "CC",
-                  validationMethod: "",
-                  client: "",
-                  documentNumber: "****************************",
-                });
+              startIcon={
+                <CloseIcon
+                  style={{ margin: "0", marginRight: "-10px" }}
+                  fontSize="large"
+                  sx={{ color: "red" }}
+                />
+              }
+            ></Button>
+          </Box>
+          <Typography
+            align={"center"}
+            sx={{
+              color: "#FF6B00",
+              fontFamily: "Nunito",
+              fontSize: "25px",
+              fontStyle: "normal",
+              fontWeight: 800,
+              lineHeight: "normal",
+            }}
+          >
+            {`DOCUMENT UPLOAD `}
+            <br />
+            <span style={{ color: "#08315C" }} color={"#071D34"}>
+              {title}
+            </span>
+          </Typography>
+          <Box
+            sx={{
+              padding: "20%",
+              textAlign: "center",
+              border: "#00000040 dashed",
+              display: imageBase64 && "none",
+            }}
+          >
+            <CircularProgress
+              sx={{ display: !loading ? "none" : "block", margin: "0 auto" }}
+              size={100}
+            />
+            <Box display={loading ? "none" : "block"}>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload IMG
+                <VisuallyHiddenInput
+                  key={key}
+                  accept="image/*"
+                  ref={fileRef}
+                  onChange={(e) => {
+                    const scan = () => {
+                      setLoading(true);
+                      handleFileInputChange(e);
+                    };
+                    scan();
+                  }}
+                  type="file"
+                />
+              </Button>
+            </Box>
+          </Box>
+          {imageBase64 && !scan && (
+            <Box>
+              <img style={{ width: "100%" }} src={imageBase64} alt="Preview" />
+            </Box>
+          )}
+          {scan && (
+            <Box>
+              <Loading />
+            </Box>
+          )}
+          {
+            <Box>
+              <Typography
+                align={"center"}
+                sx={{
+                  color: "#FF6B00",
+                  fontFamily: "Nunito",
+                  fontSize: "25px",
+                  fontStyle: "normal",
+                  fontWeight: 800,
+                  lineHeight: "normal",
+                }}
+              >
+                RESULT
+              </Typography>
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                  }}
+                >
+                  DOCUMENT NUMBER
+                </Typography>
+                <Typography>CC: {data.documentNumber} </Typography>
+              </Box>
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                  }}
+                >
+                  FIRST NAME
+                </Typography>
+                <Typography>{data.first_name}</Typography>
+              </Box>
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                  }}
+                >
+                  LAST NAME
+                </Typography>
+                <Typography>{data.last_name}</Typography>
+              </Box>
+            </Box>
+          }
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                marginTop: "20px",
               }}
             >
-              CANCELAR
-            </Button>
-            <Button
-              disabled={!imageBase64 && true}
-              sx={{
-                borderRadius: "40px",
-                background: !imageBase64 ? "#8080806e" : "#FF6B00",
-                boxShadow:
-                  "0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-                color: "#FFFFFF",
-              }}
-              onClick={async () => {
-                setScan(true);
-                handleScanZeroRequest();
-                setTimeout(() => {
-                  setScan(false);
-                }, 6000);
-              }}
-            >
-              SCANEAR
-            </Button>
+              <Button
+                sx={{
+                  borderRadius: "40px",
+                  background: "#FF6B00",
+                  boxShadow:
+                    "0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                  color: "#FFFFFF",
+                }}
+                onClick={() => {
+                  setKey((e) => e + 1);
+                  setImageBase64("");
+                  setLoading(false);
+                  setData({
+                    img: "",
+                    last_name: "****************************",
+                    first_name: "***************************",
+                    documentType: "CC",
+                    validationMethod: "",
+                    client: "",
+                    documentNumber: "****************************",
+                  });
+                }}
+              >
+                CANCEL
+              </Button>
+              <Button
+                disabled={!imageBase64 && true}
+                sx={{
+                  borderRadius: "40px",
+                  background: !imageBase64 ? "#8080806e" : "#FF6B00",
+                  boxShadow:
+                    "0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+                  color: "#FFFFFF",
+                }}
+                onClick={async () => {
+                  setScan(true);
+                  handleScanZeroRequest();
+                }}
+              >
+                SCAN
+              </Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
+    </Box>
   );
 };
 

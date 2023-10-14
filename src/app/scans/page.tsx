@@ -20,25 +20,6 @@ export default function Home() {
     },
   ]);
   const [petition, setPetition] = useState(1);
-  const [notes, setNotes] = useState<
-    Array<{
-      Categories_idCategories: number;
-      idNOTE: number;
-      msg: string;
-      titleNote: string;
-    }>
-  >([]);
-  const [categories, setCategories] = useState<
-    Array<{
-      categoryName: string;
-      idCategories: number;
-    }>
-  >([
-    {
-      categoryName: "",
-      idCategories: 1,
-    },
-  ]);
 
   useEffect(() => {
     const functionGetData = async () => {

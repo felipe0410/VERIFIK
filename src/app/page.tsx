@@ -3,18 +3,31 @@ import { Box, Typography, Button } from "@mui/material";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import FlipIcon from "@mui/icons-material/Flip";
 import ScannerIcon from "@mui/icons-material/Scanner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalComponent from "./scaner/scan";
 
 const CreateNote = () => {
   const [openZero, setOpenZero] = useState(false);
   const [openPrompt, setOpenPrompt] = useState(false);
   const [openStudio, setOpenStudio] = useState(false);
+  const [petition, setPetition] = useState(0);
 
-  console.log(openZero);
-  console.log(openPrompt);
-  console.log(openStudio);
+  useEffect(() => {
+    setOpenZero(false);
+    setOpenPrompt(false);
+    setOpenStudio(false);
+  }, [petition]);
 
+  const close = (typeScan: string) => {
+    switch (typeScan) {
+      case "SCAN-ZERO":
+        setOpenZero(false);
+        break;
+
+      default:
+        break;
+    }
+  };
   const typeScan = [
     {
       name: "SCAN-ZERO",
@@ -28,7 +41,9 @@ const CreateNote = () => {
       endPoint: "https://api.verifik.co/v2/ocr/scan-zero",
       open: openZero,
       setOpen: setOpenZero,
-      close: () => setOpenZero(false),
+      close: () => {
+        setOpenZero(false);
+      },
     },
     {
       name: "SCAN-PROMPT",
@@ -61,7 +76,7 @@ const CreateNote = () => {
   ];
 
   return (
-    <Box  sx={{ color: "#fff", marginTop: "130px" }}>
+    <Box sx={{ color: "#fff", marginTop: "130px" }}>
       <Typography
         align="center"
         color="initial"
@@ -129,7 +144,7 @@ const CreateNote = () => {
                       }
                     </Box>
                     <ModalComponent
-                      setOpen={close}
+                      setOpen={setPetition}
                       title={button.name}
                       pacth={button.pacth}
                       open={button.open}
