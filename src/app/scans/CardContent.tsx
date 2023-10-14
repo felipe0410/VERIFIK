@@ -171,14 +171,14 @@ const CardContentt: React.FC<CardNoteProps> = ({
           onClick={() => setPetition(true)}
           variant="contained"
         >
-          MOSTRAR DETALLES
+          SHOW DETAILS
         </Button>
         <Button
           sx={{ display: !open ? "none" : "block", borderRadius: "40px" }}
           onClick={() => setPetition(false)}
           variant="contained"
         >
-          Ocultar DETALLES
+          HIDE DETAILS
         </Button>
       </CardActions>
     </CardContent>
