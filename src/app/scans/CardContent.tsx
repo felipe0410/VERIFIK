@@ -48,7 +48,7 @@ const CardContentt: React.FC<CardNoteProps> = ({
               sx={{
                 color: "#FFF",
                 fontFamily: "Nunito",
-                fontSize: "20px",
+                fontSize: { xs: "12px", sm: "20px" },
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "normal",
@@ -63,7 +63,7 @@ const CardContentt: React.FC<CardNoteProps> = ({
               sx={{
                 color: "#FF6B00",
                 fontFamily: "Nunito",
-                fontSize: "20px",
+                fontSize: { xs: "12px", sm: "20px" },
                 fontStyle: "normal",
                 fontWeight: 800,
                 lineHeight: "normal",
@@ -80,7 +80,7 @@ const CardContentt: React.FC<CardNoteProps> = ({
             sx={{
               color: "#071D34",
               fontFamily: "Nunito",
-              fontSize: "20px",
+              fontSize: { xs: "12px", sm: "20px" },
               fontStyle: "normal",
               fontWeight: 400,
               lineHeight: "normal",
@@ -109,7 +109,7 @@ const CardContentt: React.FC<CardNoteProps> = ({
               sx={{
                 color: "#071D34",
                 fontFamily: "Nunito",
-                fontSize: "20px",
+                fontSize: { xs: "12px", sm: "20px" },
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "normal",
@@ -137,7 +137,7 @@ const CardContentt: React.FC<CardNoteProps> = ({
               sx={{
                 color: "#071D34",
                 fontFamily: "Nunito",
-                fontSize: "20px",
+                fontSize: { xs: "12px", sm: "20px" },
                 fontStyle: "normal",
                 fontWeight: 400,
                 lineHeight: "normal",

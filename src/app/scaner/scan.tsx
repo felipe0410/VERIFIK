@@ -209,7 +209,7 @@ const ModalComponent = ({
             sx={{
               color: "#FF6B00",
               fontFamily: "Nunito",
-              fontSize: "25px",
+              fontSize: { xs: "12px", sm: "25px" },
               fontStyle: "normal",
               fontWeight: 800,
               lineHeight: "normal",
@@ -273,7 +273,7 @@ const ModalComponent = ({
                 sx={{
                   color: "#FF6B00",
                   fontFamily: "Nunito",
-                  fontSize: "25px",
+                  fontSize: { xs: "12px", sm: "25px" },
                   fontStyle: "normal",
                   fontWeight: 800,
                   lineHeight: "normal",

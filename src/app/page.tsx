@@ -80,7 +80,7 @@ const CreateNote = () => {
         sx={{
           color: "#FF6B00",
           fontFamily: "Nunito",
-          fontSize: "50px",
+          fontSize: { xs: "30px", sm: "50px" },
           fontStyle: "normal",
           fontWeight: 800,
           lineHeight: "normal",
@@ -117,7 +117,7 @@ const CreateNote = () => {
                       sx={{
                         color: "#FFF",
                         fontFamily: "Nunito",
-                        fontSize: "24px",
+                        fontSize: { xs: "16px", sm: "24px" },
                         fontStyle: "normal",
                         fontWeight: 700,
                         lineHeight: "normal",
@@ -127,7 +127,7 @@ const CreateNote = () => {
                     </Typography>
                     <Box
                       sx={{
-                        padding: "20px",
+                        padding: { xs: "12px", sm: "20px" },
                       }}
                     >
                       {button.icon}
