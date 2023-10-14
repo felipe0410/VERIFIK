@@ -18,20 +18,14 @@ const CreateNote = () => {
     setOpenStudio(false);
   }, [petition]);
 
-  const close = (typeScan: string) => {
-    switch (typeScan) {
-      case "SCAN-ZERO":
-        setOpenZero(false);
-        break;
-
-      default:
-        break;
-    }
-  };
   const typeScan = [
     {
       name: "SCAN-ZERO",
-      icon: <SensorOccupiedIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      icon: (
+        <SensorOccupiedIcon
+          sx={{ fontSize: { xs: "15vw", sm: "4vw" }, color: "#1aabff" }}
+        />
+      ),
       pacth: "/scan-zero",
       description: [
         "Offers OCR for extracting information from scanned documents.",
@@ -41,13 +35,14 @@ const CreateNote = () => {
       endPoint: "https://api.verifik.co/v2/ocr/scan-zero",
       open: openZero,
       setOpen: setOpenZero,
-      close: () => {
-        setOpenZero(false);
-      },
     },
     {
       name: "SCAN-PROMPT",
-      icon: <FlipIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      icon: (
+        <FlipIcon
+          sx={{ fontSize: { xs: "15vw", sm: "4vw" }, color: "#1aabff" }}
+        />
+      ),
       pacth: "/scan-prompt",
       description: [
         "Enables scanning, extraction, and verification of data in documents using OCR and AI technology.",
@@ -57,11 +52,14 @@ const CreateNote = () => {
       endPoint: "https://api.verifik.co/v2/ocr/scan-prompt",
       open: openPrompt,
       setOpen: setOpenPrompt,
-      close: () => setOpenPrompt(false),
     },
     {
       name: "SCAN-STUDIO",
-      icon: <ScannerIcon sx={{ fontSize: "4vw", color: "#1aabff" }} />,
+      icon: (
+        <ScannerIcon
+          sx={{ fontSize: { xs: "15vw", sm: "4vw" }, color: "#1aabff" }}
+        />
+      ),
       pacth: "/scan-studio",
       description: [
         "Uses pretrained models for performing OCR on identity documents.",
@@ -71,7 +69,6 @@ const CreateNote = () => {
       endPoint: "https://api.verifik.co/v2/ocr/scan-studio",
       open: openStudio,
       setOpen: setOpenStudio,
-      close: () => setOpenStudio(false),
     },
   ];
 
@@ -96,7 +93,7 @@ const CreateNote = () => {
         {
           <Box
             sx={{
-              display: "flex",
+              display: { sm: "flex" },
               justifyContent: "space-around",
             }}
           >
@@ -104,7 +101,8 @@ const CreateNote = () => {
               <Button
                 onClick={() => button.setOpen(true)}
                 sx={{
-                  width: "25%",
+                  marginY: { sm: "0", xs: "20px" },
+                  width: { sm: "25%" },
                   padding: "20px",
                   borderRadius: "40px",
                   background: "#08315C",

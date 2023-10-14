@@ -19,6 +19,7 @@ import "@fontsource/nunito/500.css";
 import "@fontsource/nunito/600.css";
 import "@fontsource/nunito/700.css";
 import "@fontsource/nunito/800.css";
+import OpenIconSpeedDial from "./components/menu/menu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         <Box
           id="Container Sidebar"
           sx={{
+            display: { xs: "none", sm: "block" },
             position: "fixed",
             top: 0,
             left: 0,
@@ -46,6 +48,17 @@ export default function RootLayout({
           }}
         >
           <Sidebar />
+        </Box>
+        <Box
+          sx={{
+            display: { sm: "none", xs: "block" },
+            bottom: "10px",
+            right: "10px",
+            zIndex: 10,
+            position: "fixed",
+          }}
+        >
+          <OpenIconSpeedDial />
         </Box>
         <Box
           sx={{
@@ -62,11 +75,12 @@ export default function RootLayout({
           id={"container children layout"}
           sx={{
             marginTop: "64px",
-            marginLeft: "265px",
+            marginLeft: { sm: "265px" },
           }}
         >
           {children}
         </Box>
+        +{" "}
       </body>
     </html>
   );
